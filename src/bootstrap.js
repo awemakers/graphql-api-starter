@@ -37,10 +37,22 @@ function getQueries() {
       });
       return resolve(`
         type Query {${queries}}
+      `);
+    });
+  });
+}
 
-        schema {
-          query: Query
-        }
+function getMutations() {
+  return new Promise((resolve, reject) => {
+    recursive('./src/components', ['!mutation.graphql'], (err, files) => {
+      if (err) return reject(err);
+
+      let mutations:String = '';
+      files.forEach((file) => {
+        mutations += fs.readFileSync(file, 'utf8');
+      });
+      return resolve(`
+        type Mutation {${mutations}}
       `);
     });
   });
@@ -48,7 +60,7 @@ function getQueries() {
 
 function getTypeDefs() {
   return new Promise((resolve, reject) => {
-    Promise.all([getTypes(), getQueries()]).then(data => resolve([data.join('\n')]))
+    Promise.all([getTypes(), getQueries(), getMutations()]).then(data => resolve([data.join('\n')]))
     .catch(err => reject(err));
   });
 }
@@ -70,16 +82,34 @@ function getQueryResolvers() {
   });
 }
 
+function getMutationResolvers() {
+  return new Promise((resolve, reject) => {
+    const mutations = {};
+
+    recursive('./src/components', ['!mutation_resolvers.js'], (err, files) => {
+      if (err) return reject(err);
+
+      files.forEach((file) => {
+        const r = require(path.join(__dirname, '../', file));
+        if (typeof r.default !== 'undefined' && typeof r.default !== 'undefined') _.extend(mutations, r.default);
+      });
+
+      return resolve(mutations);
+    });
+  });
+}
+
 export default function getSchema() {
   return new Promise((resolve, reject) => {
     Promise
-      .all([getTypeDefs(), getQueryResolvers()])
+      .all([getTypeDefs(), getQueryResolvers(), getMutationResolvers()])
       .then((value) => {
         spinner.stop(true);
         const schema = makeExecutableSchema({
           typeDefs: value[0],
           resolvers: {
             Query: value[1],
+            Mutation: value[2],
           },
         });
 

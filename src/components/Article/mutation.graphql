@@ -1,0 +1,5 @@
+createArticle(
+  description: String!
+  title: String!
+  slug: String!
+): Article
