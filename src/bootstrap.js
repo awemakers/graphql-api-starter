@@ -6,9 +6,9 @@ import path from 'path';
 import _ from 'lodash';
 import { makeExecutableSchema } from 'graphql-tools';
 
-var Spinner = require('cli-spinner').Spinner;
+import { Spinner } from 'cli-spinner';
 
-var spinner = new Spinner('Server is starting.. %s');
+const spinner = new Spinner('Server is starting.. %s');
 spinner.setSpinnerString('|/-\\');
 spinner.start();
 
