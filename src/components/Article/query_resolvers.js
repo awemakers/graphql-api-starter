@@ -1,5 +1,5 @@
 export default {
-  articles (root, args) {
-    console.log(args)
-  }
-}
+  articles(root, args) {
+    console.log(args);
+  },
+};

@@ -12,7 +12,7 @@ const spinner = new Spinner('Server is starting.. %s');
 spinner.setSpinnerString('|/-\\');
 spinner.start();
 
-function getTypes () {
+function getTypes() {
   return new Promise((resolve, reject) => {
     recursive('./src/components', ['!types.graphql'], (err, files) => {
       if (err) return reject(err);
@@ -26,7 +26,7 @@ function getTypes () {
   });
 }
 
-function getQueries () {
+function getQueries() {
   return new Promise((resolve, reject) => {
     recursive('./src/components', ['!query.graphql'], (err, files) => {
       if (err) return reject(err);
@@ -46,18 +46,15 @@ function getQueries () {
   });
 }
 
-function getTypeDefs () {
+function getTypeDefs() {
   return new Promise((resolve, reject) => {
-    Promise.all([getTypes(), getQueries()]).then((data) => {
-      return resolve([data.join('\n')]);
-    })
+    Promise.all([getTypes(), getQueries()]).then(data => resolve([data.join('\n')]))
     .catch(err => reject(err));
   });
 }
 
-function getQueryResolvers () {
+function getQueryResolvers() {
   return new Promise((resolve, reject) => {
-
     const resolvers = {};
 
     recursive('./src/components', ['!query_resolvers.js'], (err, files) => {
@@ -67,22 +64,27 @@ function getQueryResolvers () {
         const r = require(path.join(__dirname, '../', file));
         if (typeof r.default !== 'undefined' && typeof r.default !== 'undefined') _.extend(resolvers, r.default);
       });
-      
+
       return resolve(resolvers);
     });
   });
 }
 
-export function getSchema () {
+export default function getSchema() {
   return new Promise((resolve, reject) => {
-    return Promise.all([getTypeDefs(), getQueryResolvers()]).then((value) => {
-      spinner.stop(true)
-      return resolve(makeExecutableSchema({
-        typeDefs: value[0], 
-        resolvers: {
-          Query: value[1]
-        },
-      }))
-    })
+    Promise
+      .all([getTypeDefs(), getQueryResolvers()])
+      .then((value) => {
+        spinner.stop(true);
+        const schema = makeExecutableSchema({
+          typeDefs: value[0],
+          resolvers: {
+            Query: value[1],
+          },
+        });
+
+        return resolve(schema);
+      })
+      .catch(err => reject(err));
   });
 }
