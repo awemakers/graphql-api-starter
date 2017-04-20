@@ -1,0 +1,4 @@
+articles(
+  limit: Int
+  offset: Int
+): [Article]

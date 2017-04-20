@@ -1,0 +1,5 @@
+type Article {
+  description: String
+  title: String
+  slug: String
+}
