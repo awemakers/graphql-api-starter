@@ -6,13 +6,18 @@ import path from 'path';
 import _ from 'lodash';
 import { makeExecutableSchema } from 'graphql-tools';
 
+/**
+ * Loader
+ */
 import { Spinner } from 'cli-spinner';
-
 const spinner = new Spinner('Server is starting.. %s');
 spinner.setSpinnerString('|/-\\');
 spinner.start();
 
-function getTypes() {
+/**
+ * Get Type of components graphql
+ */
+function getTypes(): Promise<String> {
   return new Promise((resolve, reject) => {
     recursive('./src/components', ['!types.graphql'], (err, files) => {
       if (err) return reject(err);
@@ -26,7 +31,10 @@ function getTypes() {
   });
 }
 
-function getQueries() {
+/**
+ * Get Queries graphql of components
+ */
+function getQueries(): Promise<String> {
   return new Promise((resolve, reject) => {
     recursive('./src/components', ['!query.graphql'], (err, files) => {
       if (err) return reject(err);
@@ -42,7 +50,10 @@ function getQueries() {
   });
 }
 
-function getMutations() {
+/**
+ * Get Mutation of graphql components
+ */
+function getMutations(): Promise<String> {
   return new Promise((resolve, reject) => {
     recursive('./src/components', ['!mutation.graphql'], (err, files) => {
       if (err) return reject(err);
@@ -58,14 +69,20 @@ function getMutations() {
   });
 }
 
-function getTypeDefs() {
+/**
+ * Return an array of type definition (mutation, query)
+ */
+function getTypeDefs(): Promise<Array> {
   return new Promise((resolve, reject) => {
     Promise.all([getTypes(), getQueries(), getMutations()]).then(data => resolve([data.join('\n')]))
     .catch(err => reject(err));
   });
 }
 
-function getQueryResolvers() {
+/**
+ * Get Resolvers for each query
+ */
+function getQueryResolvers(): Promise<Object> {
   return new Promise((resolve, reject) => {
     const resolvers = {};
 
@@ -82,7 +99,10 @@ function getQueryResolvers() {
   });
 }
 
-function getMutationResolvers() {
+/**
+ * Get mutation for each mutaton
+ */
+function getMutationResolvers(): Promise<Object> {
   return new Promise((resolve, reject) => {
     const mutations = {};
 
@@ -99,7 +119,11 @@ function getMutationResolvers() {
   });
 }
 
-export default function getSchema() {
+/**
+ * Retun makeExecutableSchema for Apollo server with
+ * Query and Mutation
+ */
+export default function getSchema(): Promise<Object> {
   return new Promise((resolve, reject) => {
     Promise
       .all([getTypeDefs(), getQueryResolvers(), getMutationResolvers()])
