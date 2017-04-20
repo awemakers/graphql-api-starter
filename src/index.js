@@ -17,5 +17,6 @@ getSchema().then((schema) => {
   app.use('/graphql', bodyParser.json(), graphqlExpress({ schema }));
   app.use('/graphiql', graphiqlExpress({endpointURL: '/graphql'}));
   app.listen(PORT);
+  console.log(`Server listening on ${PORT}`)
 }).catch(err => console.log(err));
 

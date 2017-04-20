@@ -6,6 +6,12 @@ import path from 'path';
 import _ from 'lodash';
 import { makeExecutableSchema } from 'graphql-tools';
 
+var Spinner = require('cli-spinner').Spinner;
+
+var spinner = new Spinner('Server is starting.. %s');
+spinner.setSpinnerString('|/-\\');
+spinner.start();
+
 function getTypes () {
   return new Promise((resolve, reject) => {
     recursive('./src/components', ['!types.graphql'], (err, files) => {
@@ -70,6 +76,7 @@ function getQueryResolvers () {
 export function getSchema () {
   return new Promise((resolve, reject) => {
     return Promise.all([getTypeDefs(), getQueryResolvers()]).then((value) => {
+      spinner.stop(true)
       return resolve(makeExecutableSchema({
         typeDefs: value[0], 
         resolvers: {
