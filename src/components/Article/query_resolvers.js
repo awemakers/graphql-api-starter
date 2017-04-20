@@ -1,5 +1,7 @@
+import Article from './model';
+
 export default {
-  articles(root, args) {
-    console.log(args);
+  articles() {
+    return Article.find().lean();
   },
 };

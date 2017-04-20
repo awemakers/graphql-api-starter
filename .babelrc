@@ -7,6 +7,7 @@
   ],
   "plugins": [
     ["module-alias", [
+      { "src": "./src/database/", "expose": "database" },
     ]]
   ]
 }

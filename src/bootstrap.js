@@ -10,6 +10,7 @@ import { makeExecutableSchema } from 'graphql-tools';
  * Loader
  */
 import { Spinner } from 'cli-spinner';
+
 const spinner = new Spinner('Server is starting.. %s');
 spinner.setSpinnerString('|/-\\');
 spinner.start();

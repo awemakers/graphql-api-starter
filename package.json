@@ -12,11 +12,13 @@
   "dependencies": {
     "body-parser": "^1.17.1",
     "cli-spinner": "^0.2.6",
+    "dotenv": "^4.0.0",
     "express": "^4.15.2",
     "graphql": "^0.9.3",
     "graphql-server-express": "^0.7.1",
     "graphql-tools": "^0.11.0",
     "lodash": "^4.17.4",
+    "mongoose": "^4.9.5",
     "recursive-readdir": "^2.1.1"
   },
   "devDependencies": {
