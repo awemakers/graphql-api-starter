@@ -1,5 +1,7 @@
 # Graphql Api Starter
 
+[![Build Status](https://travis-ci.org/baloran/graphql-api-starter.svg?branch=master)](https://travis-ci.org/baloran/graphql-api-starter)
+
 > With Great Power Comes Great Responsibility
 
 ## Requirements
