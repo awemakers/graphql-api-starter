@@ -4,14 +4,16 @@
   "description": "A simple GraphQL API starter",
   "main": "./src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "babel-node ./src",
     "dev": "nodemon ./src --exec babel-node",
+    "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "./node_modules/eslint/bin/eslint.js ./src/** --ext .js"
   },
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.17.1",
     "cli-spinner": "^0.2.6",
+    "cors": "^2.8.3",
     "dotenv": "^4.0.0",
     "express": "^4.15.2",
     "graphql": "^0.9.3",
